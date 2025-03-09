@@ -1,0 +1,2 @@
+store_id,uptime_last_hour(min),uptime_last_day(hrs),uptime_last_week(hrs),downtime_last_hour(min),downtime_last_day(hrs),downtime_last_week(hrs)
+a12f45d6-7bc8-47ec-8f23-cbda9edc4ef6,0.0,8.0,9.0,60.0,16.0,159.0
