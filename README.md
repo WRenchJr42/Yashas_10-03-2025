@@ -8,7 +8,7 @@ Better Approach : Use default cleanup of the python module, but redudndancy is s
 
 2. calctime() may be a bottleneck. Inefficiencies may be introduced if there are many requests in concurrency.
  
-Better Approach : fetchmany(size) or usage of loop that goes through the table's rows is preffered (for humungous fetching).
+Better Approach : fetchmany(size) or usage of loop that goes through the table's rows is prefered (for humungous fetching).
 
 3. Reports are stored in mem (reports dictionary). If the system runs for a long time or handles many reports, mem usage will grow.
  
