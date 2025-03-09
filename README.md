@@ -1,4 +1,18 @@
 # Yashas_10-03-2025
+## What it does 
+
+A simple flask app with 2 triggering routes with redundant error handling.
+
+## API testing points
+
+Route : /trigger_report  
+
+http://<ip>:<port>/trigger_report?store_id=<Store_ID> 
+
+Route : /get_report
+
+https://<ip>:<port>/get_report?repid=<Report_ID>
+
 ## Potential Improvements
 
 
