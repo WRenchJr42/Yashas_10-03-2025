@@ -7,11 +7,11 @@ A simple flask app with 2 triggering routes with redundant error handling.
 
 Route : /trigger_report  
 
-http://<ip>:<port>/trigger_report?store_id=<Store_ID> 
+http:// <ip>:<port>/trigger_report?store_id=<Store_ID> 
 
 Route : /get_report
 
-https://<ip>:<port>/get_report?repid=<Report_ID>
+https:// <ip>:<port>/get_report?repid=<Report_ID>
 
 ## Potential Improvements
 
