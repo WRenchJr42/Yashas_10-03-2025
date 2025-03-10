@@ -6,6 +6,7 @@ import io
 import sqlite3
 import datetime
 import logging
+import pytz
 
 app = Flask(__name__)
 
@@ -27,7 +28,7 @@ def dbconnect(): # Connects to sql database
         msg = f"Couldn't connect to the database: {e}"
         logging.error(msg) # Log as error, function call to logging
         raise sqlite3.Error(msg)
-def get_timezone(store_id):
+def getz(store_id):
     try:
         conn = dbconnect()
         cur = conn.cursor()
@@ -135,7 +136,7 @@ def gencsv(store_id):
         reftime = datetime.datetime.utcnow()
     conn.close() # Close this connection
     # Get the store's timezone; if missing, default to America/Chicago.
-    tz_str = get_timezone(store_id)
+    tz_str = getz(store_id)
     try:
         local_tz = pytz.timezone(tz_str)
         # Convert reftime from UTC to the store's local time
