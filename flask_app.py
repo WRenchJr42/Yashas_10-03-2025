@@ -178,7 +178,7 @@ def gencsv(store_id):
 
     return output.getvalue()  # Output the csv
 
-def storerep(repid, store_id, repdata):
+def storerep(repid, store_id, repdata): # Was this necessary ? May be for company's reference?
     try:
         conn = dbconnect()
         cur = conn.cursor()
