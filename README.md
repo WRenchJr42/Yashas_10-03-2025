@@ -43,5 +43,4 @@ Better approach: Store reports in a database table instead of a dictionary.
 4. CSV data is kept in memory using (io.StringIO()). If reports get too large, memory can become an issue.
  
 Better approach: Writing a temporary file on disk before giving it to the user.
-http://<ip>:<port>/trigger_report?store_id=<Store_ID>
-https://<ip>:<port>/get_report?repid=<Report_ID>
+
