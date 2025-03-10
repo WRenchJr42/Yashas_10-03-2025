@@ -13,7 +13,7 @@ A simple flask app with 2 triggering routes with redundant error handling.
 | :-------- | :------- | :------------------------- |
 | `store_id`| `string` | **Required**. Store ID     |
 
-#### Get item
+
 
 ```http
   GET https://<ip>:<port>/get_report?repid=<Report_ID>
