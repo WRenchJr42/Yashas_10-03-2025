@@ -47,7 +47,7 @@ def calctime(store_id, cs, ce): # Calculation of uptime or downtime
         if row:
             inic = row[1] # Take the 2nd value, ie; its status (active/inactive)
         else:
-            inic = 'inactive' # Assume event is inactive if there is no event
+            inic = 'active' # Assume event is active 24/7 if there is no event
     except sqlite3.Error as e:
         logging.error("SQL error in calctime while fetching prior event for store '%s': %s", store_id, e) # log this error
         conn.close() # Close connection
