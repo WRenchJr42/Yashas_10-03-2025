@@ -178,6 +178,18 @@ def gencsv(store_id):
 
     return output.getvalue()  # Output the csv
 
+def storerep(repid, store_id, repdata):
+    try:
+        conn = dbconnect()
+        cur = conn.cursor()
+        now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        cur.execute("INSERT INTO reports (report_id, store_id, repdata, generated_at) VALUES (?,?,?,?)",(repid, store_id, repdata, now))
+        conn.commit()
+        conn.close()
+        logging.info("Report %s stored in the database.", repid)
+    except Exception as e:
+        logging.error("Error storing report %s for store %s: %s", repid, store_id, e)
+
 def buildrep(repid, store_id): # to build the csv
     try:
         with reports_lock: # Lock cpu for one process (edge case?)
@@ -189,6 +201,7 @@ def buildrep(repid, store_id): # to build the csv
         with reports_lock: # lock report to ensure only one process access the db
             reports[repid]['repdata'] = repdata # Dictionary with key report report ID and object report data = report data
             reports[repid]['state'] = 'Complete' # Mark it as complete if done
+        storerep(repid, store_id, repdata)
         logging.info("Report %s for store '%s' completed successfully.", repid, store_id) # Log it as success
     except Exception as e:
         error_msg = f"Error processing report {repid} for store '{store_id}': {e}" # Processing error
@@ -196,7 +209,7 @@ def buildrep(repid, store_id): # to build the csv
         with reports_lock:
             reports[repid]['state'] = 'Error' 
             reports[repid]['repdata'] = None # Error gives out None datatype
-
+            
 @app.route('/trigger_report', methods=['GET']) # /trigger_report api route , allows GET method
 def trigger_report():
     store_id = request.args.get('store_id') # get the store_id
