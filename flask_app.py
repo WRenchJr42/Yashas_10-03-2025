@@ -27,6 +27,21 @@ def dbconnect(): # Connects to sql database
         msg = f"Couldn't connect to the database: {e}"
         logging.error(msg) # Log as error, function call to logging
         raise sqlite3.Error(msg)
+def get_timezone(store_id):
+    try:
+        conn = dbconnect()
+        cur = conn.cursor()
+        cur.execute("SELECT timezone_str FROM timezones WHERE store_id=?", (store_id,))
+        row = cur.fetchone()
+        conn.close()
+        if row and row[0]:
+            return row[0]
+        else:
+            logging.info("No timezone found for store '%s'. Assuming America/Chicago.", store_id)
+            return "America/Chicago"
+    except Exception as e:
+        logging.error("Error fetching timezone for store '%s': %s", store_id, e)
+        return "America/Chicago"
 
 def calctime(store_id, cs, ce): # Calculation of uptime or downtime 
     # cs = chain start
@@ -119,6 +134,15 @@ def gencsv(store_id):
         logging.error("Error parsing timestamp for store '%s': %s", store_id, e) # Log this error but keep refrence time to the current universal time
         reftime = datetime.datetime.utcnow()
     conn.close() # Close this connection
+    # Get the store's timezone; if missing, default to America/Chicago.
+    tz_str = get_timezone(store_id)
+    try:
+        local_tz = pytz.timezone(tz_str)
+        # Convert reftime from UTC to the store's local time
+        reftime_local = reftime.replace(tzinfo=pytz.utc).astimezone(local_tz).replace(tzinfo=None)
+    except Exception as e:
+        logging.error("Error converting reftime to local timezone for store '%s': %s", store_id, e)
+        reftime_local = reftime
 
     hrstart = reftime - datetime.timedelta(hours=1) # start chain by hours
     daystart = reftime - datetime.timedelta(days=1) # start chain by day
