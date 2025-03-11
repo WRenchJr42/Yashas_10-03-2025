@@ -189,6 +189,21 @@ def storerep(repid, store_id, repdata): # Was this necessary ? May be for compan
         logging.info("Report %s stored in the database.", repid)
     except Exception as e:
         logging.error("Error storing report %s for store %s: %s", repid, store_id, e)
+        
+def fetchrep(repid):
+    try:
+        conn = dbconnect()
+        cur = conn.cursor()
+        cur.execute("SELECT repdata FROM reports WHERE report_id=?", (repid,))
+        row = cur.fetchone()
+        conn.close()
+        if row:
+            return row[0]
+        else:
+            return None
+    except Exception as e:
+        logging.error("Error fetching report %s from database: %s", repid, e)
+        return None
 
 def buildrep(repid, store_id): # to build the csv
     try:
@@ -253,42 +268,22 @@ def get_report():
         logging.error(msg) # Log this error
         return jsonify({"error": msg}), 400 # Bad request
 
+    repdata = fetchrep(repid)
+    if repdata is None:
+        msg = f"We couldn't find a stored report with ID '{repid}'."
+        logging.error(msg)
+        return jsonify({"error": msg}), 404
+
     try:
-        with reports_lock: # No race conditions
-            report = reports.get(repid) # get the report ID
+        response = make_response(repdata)
+        response.headers["Content-Type"] = "text/csv"
+        response.headers["Content-Disposition"] = 'attachment; filename="report.csv"'
+        logging.info("Returning stored CSV for report %s.", repid)
+        return response
     except Exception as e:
-        msg = f"Cannot accessing report {repid}: {e}" # Accessing error 
-        logging.error(msg) # Log this too
-        return jsonify({"error": msg}), 500 # Not soo unexpected(edgecase handled?) error
-
-    if report is None: # If it couldnt find one
-        msg = f"We couldn't find report with ID '{repid}'."
-        logging.error(msg) # Log it in 
-        return jsonify({"error": msg}), 404 # There exists no resource that was requested
-
-    if report['state'] in ['Pending', 'Running']: # If the state is in Pending or Running
-        msg = "Your report is still getting cooked. Check back after while."
-        logging.info("Report %s is still in state '%s'.", repid, report['state']) # Log this , it was not supposed to take this long
-        return Response(msg, mimetype='text/plain') # Return the response, triggered the flask's response class
-    elif report['state'] == 'Error':  # If its an error
-        msg = "There was an error generating your report. Please try again later."
-        logging.error("Report %s ended in an error state.", repid) # Logging crucial states
-        return jsonify({"error": msg}), 500 # UNexpected condition handled
-    elif report['state'] == 'Complete': # if completed , we need to download, filegen
-        try:
-            response = make_response(report['repdata']) 
-            response.headers["Content-Type"] = "text/csv" # CSV is the document type
-            response.headers["Content-Disposition"] = 'attachment; filename="report.csv"' # name the csv file
-            logging.info("Completed a CSV for report %s.", repid) # Log this in
-            return response
-        except Exception as e:
-            msg = f"Failed to create CSV response for report {repid}: {e}"# failed and log this by calling the logging function
-            logging.error(msg)
-            return jsonify({"error": msg}), 500 # Not soo unexpected(edgecase handled?) stuff handled
-    else:
-        msg = f"Unexpected error for report {repid}."
-        logging.error(msg) # Log this too
-        return jsonify({"error": msg}), 500 # Real unexpected error
+        msg = f"Failed to create CSV response for report {repid}: {e}"
+        logging.error(msg)
+        return jsonify({"error": msg}), 500
 
 if __name__ == '__main__':
     try:
