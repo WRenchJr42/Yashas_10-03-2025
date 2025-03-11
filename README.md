@@ -51,7 +51,7 @@ graph TD;
 
 
 ## Potential Improvements
-
+###Under Code 1
 
 1. We manually call conn.close()
    
