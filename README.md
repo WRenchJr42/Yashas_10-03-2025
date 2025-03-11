@@ -10,7 +10,7 @@ graph TD;
     User -->|Trigger| Call_trigger_report;
     Call_trigger_report -->|Save in memory| Save_in_memory_using_dict;
     Save_in_memory_using_dict -->|Wait ~1 sec| Delay;
-    Delay -->|Fetch report| Call_get_report;
+    User -->|Fetch report| Call_get_report;
     Call_get_report -->|Retrieve data| Fetch_contents_from_memory;
     Fetch_contents_from_memory -->|Return output| Output;
 
@@ -22,7 +22,7 @@ graph TD;
     User -->|Trigger| Call_trigger_report;
     Call_trigger_report -->|Save in ROM| Save_in_ROM_via_DB;
     Save_in_ROM_via_DB -->|Wait 1-5 sec| Delay;
-    Delay -->|Request Report| Call_get_report;
+    User -->|Request Report| Call_get_report;
     Call_get_report -->|Retrieve Data| Fetch_contents_from_DB;
     Fetch_contents_from_DB -->|Return Output| Output;
 
