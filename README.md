@@ -4,19 +4,9 @@
 A simple flask app with 2 triggering routes with redundant error handling. 
 
 ## Here is a comparison on how the data flows 
-In the old code:
-```mermaid
-graph TD;
-    User -->|Trigger| Call_trigger_report;
-    Call_trigger_report -->|Save in memory| Save_in_memory_using_dict;
-    Save_in_memory_using_dict -->|Wait ~1 sec| Delay;
-    User -->|Fetch report| Call_get_report;
-    Call_get_report -->|Retrieve data| Fetch_contents_from_memory;
-    Fetch_contents_from_memory -->|Return output| Output;
-
-```
 
 In the new code:
+
 ```mermaid
 graph TD;
     User -->|Trigger| Call_trigger_report;
@@ -25,6 +15,19 @@ graph TD;
     User -->|Request Report| Call_get_report;
     Call_get_report -->|Retrieve Data| Fetch_contents_from_DB;
     Fetch_contents_from_DB -->|Return Output| Output;
+
+```
+
+In the old code:
+
+```mermaid
+graph TD;
+    User -->|Trigger| Call_trigger_report;
+    Call_trigger_report -->|Save in memory| Save_in_memory_using_dict;
+    Save_in_memory_using_dict -->|Wait ~1 sec| Delay;
+    User -->|Fetch report| Call_get_report;
+    Call_get_report -->|Retrieve data| Fetch_contents_from_memory;
+    Fetch_contents_from_memory -->|Return output| Output;
 
 ```
 
@@ -51,7 +54,25 @@ graph TD;
 
 
 ## Potential Improvements
-###Under Code 1
+
+### Under New Code
+1. Background tasks may become a hassle.
+
+Better Approach : Using threads is a viable option ,but, task queues can be better for scalability and error handling.
+
+2. Slow in terms of csv generation, 1-5 seconds wherein , the dictionary based in-memory csv storage is faster.
+
+Better Approach : Usage of caching based database like redis for in-memory storage of data may help speeding up of csv generation. Dictionary based csv storage will be taxing on the RAM. 
+
+3. Global states may become a potential bottleneck.
+
+Better Approach : The global reports dictionary might become a source of race conditions. A tailored database table to track report states may work.
+
+4. CSV generation (edge case handling) and Response headers.
+    Adding more error checks and fallbacks under CSV generation and caching headers may work out if thread sharing is in play.
+
+
+### Under Old Code
 
 1. We manually call conn.close()
    
