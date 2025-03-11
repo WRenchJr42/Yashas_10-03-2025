@@ -1,7 +1,14 @@
 # Yashas_10-03-2025
 ## What it does 
 
-A simple flask app with 2 triggering routes with redundant error handling. And I'm confused on why we are storing reports, I'd love to ponder on that.
+A simple flask app with 2 triggering routes with redundant error handling. 
+
+## Here is a comparison on how the data flows 
+
+```mermaid
+graph TD;
+A-->B;
+```
 
 ## API testing points
 
