@@ -7,11 +7,11 @@ A simple flask app with 2 triggering routes with redundant error handling.
 In the old code:
 ```mermaid
 graph TD;
-User--> Call /trigger_report;
-Call /trigger_report--> Save in memory using dict;
+User--> Call trigger_report;
+Call trigger_report--> Save in memory using dict;
 Save in memory using dict--> Delay (~1sec[max]);
-Delay (~1sec[max])--> Call /get_report;
-Call /get_report--> Fetch contents from memory;
+Delay (~1sec[max])--> Call get_report;
+Call get_report--> Fetch contents from memory;
 Fetch contents from memory--> Output;
 ```
 
