@@ -93,13 +93,10 @@ Better approach: Writing a temporary file on disk before giving it to the user.
 
 # Why I Chose Flask Over Django
 
-| Feature              | Django                    | Flask                          | Why Flask? |
-|----------------------|---------------------------|--------------------------------|------------|
-| **Performance**      | Slower (heavy framework)   | Faster (lightweight)          | Flask is more efficient for APIs |
-| **Flexibility**      | Opinionated, rigid        | Highly flexible               | Allows custom architecture |
-| **Microservices**    | Monolithic structure      | Ideal for microservices       | Better suited for modular apps |
-| **Learning Curve**   | Steeper (many built-ins)  | Easier to learn & customize   | More control over components |
-| **Built-in Features**| Includes ORM, auth, admin| Minimal, need to add manually | Prefer to choose only what I need |
-| **Database Handling**| Django ORM (built-in)     | SQLAlchemy (flexible choice)  | More control over database setup |
-| **Use Case**         | Best for full-stack apps  | Best for APIs & backend       | Flask is better for API development |
+| Feature              | Django                    | Flask                          
+|----------------------|---------------------------|--------------------------------|
+| **Performance**      | Slower (heavy framework)   | Faster (lightweight)          |
+| **Flexibility**      | Rigid        | Highly flexible               |
+| **Database Handling**| Django ORM    | SQLAlchemy   |
+
 
